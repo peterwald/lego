@@ -1,6 +1,7 @@
 package acme
 
 import (
+	"fmt"
 	"os"
 	"testing"
 	"time"
@@ -21,8 +22,10 @@ var (
 func init() {
 	gcloudProject = os.Getenv("GCE_PROJECT")
 	gcloudDomain = os.Getenv("GCE_DOMAIN")
+	fmt.Printf("gcloud vars: %q %q\n", gcloudProject, gcloudDomain)
 	if _, err := google.DefaultClient(context.Background(), dns.NdevClouddnsReadwriteScope); err == nil && len(gcloudProject) > 0 && len(gcloudDomain) > 0 {
 		// disable live tests if local credentials cannot be loaded.
+		fmt.Printf("Enabling live test....\n")
 		gcloudLiveTest = true
 	}
 }
