@@ -1,7 +1,6 @@
 package acme
 
 import (
-	"fmt"
 	"os"
 	"testing"
 	"time"
@@ -22,13 +21,10 @@ var (
 func init() {
 	gcloudProject = os.Getenv("GCE_PROJECT")
 	gcloudDomain = os.Getenv("GCE_DOMAIN")
-	fmt.Printf("gcloud vars: %q %q\n", gcloudProject, gcloudDomain)
-	if _, err := google.DefaultClient(context.Background(), dns.NdevClouddnsReadwriteScope); err == nil && len(gcloudProject) > 0 && len(gcloudDomain) > 0 {
-		// disable live tests if local credentials cannot be loaded.
-		fmt.Printf("Enabling live test....\n")
+	_, err := google.DefaultClient(context.Background(), dns.NdevClouddnsReadwriteScope)
+	if err == nil && len(gcloudProject) > 0 && len(gcloudDomain) > 0 {
 		gcloudLiveTest = true
 	}
-	fmt.Printf("gcloudLiveTest: %v\n", gcloudLiveTest)
 }
 
 func restoreGCloudEnv() {
@@ -36,6 +32,9 @@ func restoreGCloudEnv() {
 }
 
 func TestNewDNSProviderGoogleCloudValid(t *testing.T) {
+	if !gcloudLiveTest {
+		t.Skip("skipping live test (requires credentials)")
+	}
 	os.Setenv("GCE_PROJECT", "")
 	_, err := NewDNSProviderGoogleCloud("my-project")
 	assert.NoError(t, err)
@@ -43,6 +42,9 @@ func TestNewDNSProviderGoogleCloudValid(t *testing.T) {
 }
 
 func TestNewDNSProviderGoogleCloudValidEnv(t *testing.T) {
+	if !gcloudLiveTest {
+		t.Skip("skipping live test (requires credentials)")
+	}
 	os.Setenv("GCE_PROJECT", "my-project")
 	_, err := NewDNSProviderGoogleCloud("")
 	assert.NoError(t, err)
@@ -52,12 +54,11 @@ func TestNewDNSProviderGoogleCloudValidEnv(t *testing.T) {
 func TestNewDNSProviderGoogleCloudMissingCredErr(t *testing.T) {
 	os.Setenv("GCE_PROJECT", "")
 	_, err := NewDNSProviderGoogleCloud("")
-	assert.EqualError(t, err, "Google Cloud credentials missing")
+	assert.EqualError(t, err, "Google Cloud project name missing")
 	restoreGCloudEnv()
 }
 
 func TestLiveGoogleCloudPresent(t *testing.T) {
-	t.Logf("Live Test: %v", gcloudLiveTest)
 	if !gcloudLiveTest {
 		t.Skip("skipping live test")
 	}
@@ -70,7 +71,6 @@ func TestLiveGoogleCloudPresent(t *testing.T) {
 }
 
 func TestLiveGoogleCloudCleanUp(t *testing.T) {
-	t.Logf("Live Test: %v", gcloudLiveTest)
 	if !gcloudLiveTest {
 		t.Skip("skipping live test")
 	}

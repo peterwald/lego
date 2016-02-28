@@ -25,7 +25,7 @@ func NewDNSProviderGoogleCloud(project string) (*DNSProviderGoogleCloud, error) 
 		project = gcloudEnvAuth()
 	}
 	if project == "" {
-		return nil, fmt.Errorf("Google Cloud credentials missing")
+		return nil, fmt.Errorf("Google Cloud project name missing")
 	}
 
 	client, err := google.DefaultClient(context.Background(), dns.NdevClouddnsReadwriteScope)
