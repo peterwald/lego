@@ -57,7 +57,7 @@ func TestNewDNSProviderGoogleCloudMissingCredErr(t *testing.T) {
 }
 
 func TestLiveGoogleCloudPresent(t *testing.T) {
-	t.logf("Live Test: %v", gcloudLiveTest)
+	t.Logf("Live Test: %v", gcloudLiveTest)
 	if !gcloudLiveTest {
 		t.Skip("skipping live test")
 	}
@@ -70,7 +70,7 @@ func TestLiveGoogleCloudPresent(t *testing.T) {
 }
 
 func TestLiveGoogleCloudCleanUp(t *testing.T) {
-	t.logf("Live Test: %v", gcloudLiveTest)
+	t.Logf("Live Test: %v", gcloudLiveTest)
 	if !gcloudLiveTest {
 		t.Skip("skipping live test")
 	}
