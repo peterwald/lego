@@ -28,6 +28,7 @@ func init() {
 		fmt.Printf("Enabling live test....\n")
 		gcloudLiveTest = true
 	}
+	fmt.Printf("gcloudLiveTest: %v\n", gcloudLiveTest)
 }
 
 func restoreGCloudEnv() {
