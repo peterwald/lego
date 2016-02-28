@@ -74,6 +74,8 @@ func setup(c *cli.Context) (*Configuration, *Account, *acme.Client) {
 			provider, err = acme.NewDNSProviderDigitalOcean(authToken)
 		case "dnsimple":
 			provider, err = acme.NewDNSProviderDNSimple("", "")
+		case "gcloud":
+			provider, err = acme.NewDNSProviderGoogleCloud("")
 		case "route53":
 			awsRegion := os.Getenv("AWS_REGION")
 			provider, err = acme.NewDNSProviderRoute53("", "", awsRegion)
